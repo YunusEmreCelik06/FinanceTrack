@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinTrack Global | Professional Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">Fin<span>Track</span></div>
+            <div class="status-tag">Live Market Data</div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="hero-grid">
+            <div class="h-card clickable" onclick="openHistory('USD/TRY', rates.TRY)">
+                <span>USD / TRY</span>
+                <strong id="hero-usd">0.00 ₺</strong>
+                <small>Click for 5Y History</small>
+            </div>
+            <div class="h-card clickable" onclick="openHistory('EUR/USD', 1/rates.EUR)">
+                <span>EUR / USD</span>
+                <strong id="hero-eur">$0.0000</strong>
+                <small>Click for 5Y History</small>
+            </div>
+            <div class="h-card clickable" onclick="openHistory('GOLD (OZ)', 1/rates.XAU)">
+                <span>GOLD (ONS/USD)</span>
+                <strong id="hero-gold-ons">$0.00</strong>
+                <div class="sub-price" id="hero-gold-gram">Gram: 0.00 ₺</div>
+            </div>
+            <div class="h-card clickable" onclick="openHistory('BTC/USD', 1/rates.BTC)">
+                <span>BITCOIN</span>
+                <strong id="hero-btc">$0.00</strong>
+                <small>Click for 5Y History</small>
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <section class="card data-list">
+                <h3>Global Market List</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr><th>Symbol</th><th>Price</th><th>Action</th></tr>
+                        </thead>
+                        <tbody id="market-list"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <aside class="sidebar">
+                <div class="card converter">
+                    <h3>Universal Converter</h3>
+                    <div class="input-group">
+                        <input type="number" id="amt" value="1">
+                        <select id="from"></select>
+                    </div>
+                    <div class="divider">⇅</div>
+                    <div class="input-group">
+                        <div id="res-val">0.00</div>
+                        <select id="to"></select>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <div id="chartModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Asset History</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="historyChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
