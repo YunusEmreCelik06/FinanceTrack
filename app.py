@@ -12,11 +12,28 @@ transactions = [
     {'amount': 200, 'category': 'Yemek', 'type': 'Gider'}
 ]
 
+import requests  # 1. Bunu dosyanın EN ÜSTÜNE, diğer importların yanına ekle
+
+# ... diğer kodların (app = Flask(__name__) vb.) burada kalsın ...
+
 @app.route('/')
 def index():
-    # Geçici olarak boş bir rates sözlüğü ekliyoruz ki hata vermesin
-    rates = {'TRY': '0.00', 'USD': '0.00', 'EUR': '0.00'}
-    return render_template('index.html', transactions=transactions, rates=rates) 
+    try:
+        # Ücretsiz bir API'den canlı döviz verisi çekiyoruz
+        response = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
+        data = response.json()
+        
+        # Sitedeki kutucuklara gidecek verileri hazırlıyoruz
+        rates = {
+            'TRY': round(data['rates']['TRY'], 2),
+            'USD': '1.00',
+            'EUR': round(data['rates']['TRY'] / data['rates']['EUR'], 2)
+        }
+    except:
+        # Eğer internette veya API'de sorun olursa site çökmesin diye yedek veriler
+        rates = {'TRY': '31.25', 'USD': '1.00', 'EUR': '33.50'}
+        
+    return render_template('index.html', transactions=transactions, rates=rates)
 
 @app.route('/add', methods=['POST'])
 def add_transaction():
