@@ -14,7 +14,9 @@ transactions = [
 
 @app.route('/')
 def index():
-    return render_template('index.html', transactions=transactions)
+    # Geçici olarak boş bir rates sözlüğü ekliyoruz ki hata vermesin
+    rates = {'TRY': '0.00', 'USD': '0.00', 'EUR': '0.00'}
+    return render_template('index.html', transactions=transactions, rates=rates) 
 
 @app.route('/add', methods=['POST'])
 def add_transaction():
