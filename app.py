@@ -16,24 +16,29 @@ import requests  # 1. Bunu dosyanın EN ÜSTÜNE, diğer importların yanına ek
 
 # ... diğer kodların (app = Flask(__name__) vb.) burada kalsın ...
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
+    # 1. Canlı Döviz Verilerini Çekme
     try:
-        # Ücretsiz bir API'den canlı döviz verisi çekiyoruz
         response = requests.get("https://api.exchangerate-api.com/v4/latest/USD")
         data = response.json()
-        
-        # Sitedeki kutucuklara gidecek verileri hazırlıyoruz
         rates = {
             'TRY': round(data['rates']['TRY'], 2),
             'USD': '1.00',
             'EUR': round(data['rates']['TRY'] / data['rates']['EUR'], 2)
         }
     except:
-        # Eğer internette veya API'de sorun olursa site çökmesin diye yedek veriler
         rates = {'TRY': '31.25', 'USD': '1.00', 'EUR': '33.50'}
-        
-    return render_template('index.html', transactions=transactions, rates=rates)
+
+    # 2. Döviz Dönüştürücü Mantığı
+    converted_result = None
+    if request.method == 'POST':
+        amount = request.form.get('amount')
+        if amount:
+            # Basitçe girilen miktarı dolar kuruyla çarpıyoruz
+            converted_result = round(float(amount) * float(rates['TRY']), 2)
+
+    return render_template('index.html', transactions=transactions, rates=rates, converted=converted_result)
 
 @app.route('/add', methods=['POST'])
 def add_transaction():
